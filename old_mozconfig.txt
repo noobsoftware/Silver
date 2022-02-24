@@ -1,0 +1,36 @@
+# Standard build options for Pale Moon
+ac_add_options --enable-application=basilisk
+#ac_add_options --enable-optimize=-O2
+ac_add_options --enable-optimize=-Os
+ac_add_options --enable-jemalloc
+ac_add_options --enable-strip
+ac_add_options --enable-devtools
+ac_add_options --disable-eme
+ac_add_options --disable-gamepad
+ac_add_options --disable-tests
+ac_add_options --disable-debug
+ac_add_options --disable-necko-wifi
+ac_add_options --disable-updater
+#ac_add_options --disable-debug-symbols
+ac_add_options --with-macos-sdk=/Volumes/t1_backup/silver_2/MacOSX10.11.sdk
+#ac_add_options --with-macos-sdk=/Volumes/t1_backup/silver_2/MacOSX10.14.sdk
+
+
+#new
+ac_add_options --with-pthreads
+
+# Please see https://www.palemoon.org/redist.shtml for restrictions when using the official branding.
+# ac_add_options --enable-official-branding
+# export MOZILLA_OFFICIAL=1
+
+# For versions after 28.12.0
+# ac_add_options --enable-phoenix-extensions
+
+# Uncomment if using clang++ from Xcode 10 or higher
+export CXX="/usr/bin/clang++ -std=gnu++11 -stdlib=libc++"
+
+# Set up the basilisk extension app version 
+export BASILISK_VERSION=1
+
+# Disable telemetry reporting
+export MOZ_TELEMETRY_REPORTING= 

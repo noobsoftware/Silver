@@ -1,0 +1,26 @@
+#!/bin/sh
+SRCDIR=$(dirname $0)
+TOPSRCDIR="$SRCDIR"
+MOZILLA_SRCDIR="${SRCDIR}/platform"
+export OLD_CONFIGURE="${MOZILLA_SRCDIR}"/old-configure
+
+# Ensure the comm-* values are used.
+export MOZ_SOURCE_CHANGESET=$(hg -R "$TOPSRCDIR" parent --template="{node}" 2>/dev/null)
+export MOZ_SOURCE_REPO=$(hg -R "$TOPSRCDIR" showconfig paths.default 2>/dev/null | sed -e "s/^ssh:/https:/")
+
+# If MOZCONFIG isn't set, use the .mozconfig from the current directory. This
+# overrides the lookup in mozilla-central's configure, which looks in the wrong
+# directory for this file.
+if test -z "$MOZCONFIG" -a -f "$SRCDIR"/.mozconfig; then
+    export MOZCONFIG="$SRCDIR"/.mozconfig
+elif test -z "$MOZCONFIG" -a -f "$SRCDIR"/mozconfig; then
+    export MOZCONFIG="$SRCDIR"/mozconfig
+fi
+
+# Execute the mozilla configure script in the current directory, adding the
+# parameter we need to run comm-central. Since the configure script is really
+# just a wrapper around invoking a python variant, execute the underlying python
+# directly. We use a copy of the underlying configure script to get paths
+# correct.
+set -- "$@" --with-external-source-dir="$TOPSRCDIR"
+which python > /dev/null && exec python "$TOPSRCDIR/configure.py" "$@" || exec python "$TOPSRCDIR/configure.py" "$@"
